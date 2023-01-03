@@ -37,6 +37,7 @@ const saveTodo = (text) => {
   // limpa a variável
   todoInput.value="";
   todoInput.focus();
+  localStorage.atividade=todoTitle;
   
 };
 const toggleForms = () => {
@@ -110,7 +111,6 @@ editForm.addEventListener("submit", (e) => {
     // atualizar
     updateTodo(editInputValue)
   }
-
   toggleForms()
 
 });
