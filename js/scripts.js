@@ -111,7 +111,7 @@ editForm.addEventListener("submit", (e) => {
     // atualizar
     updateTodo(editInputValue)
   }
-  toggleForms()
+   toggleForms()
 
 });
 
