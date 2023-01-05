@@ -6,6 +6,7 @@ const editForm = document.querySelector("#edit-form");
 const editInput = document.querySelector("#edit-input");
 const cancelEditBtn = document.querySelector("#cancel-edit-btn");
 let oldInputValue;
+var arr = [];
 
 // Funções
 
@@ -35,10 +36,9 @@ const saveTodo = (text) => {
   // adiciona os elementos na Lista de Atividades
   todoList.appendChild(todo);
   // limpa a variável
+  localStorage.meuArr=JSON.stringify(arr);
   todoInput.value="";
   todoInput.focus();
-  localStorage.atividade=todoTitle;
-  
 };
 const toggleForms = () => {
   editForm.classList.toggle("hide");
@@ -65,9 +65,17 @@ const updateTodo = (text) => {
 todoForm.addEventListener("submit", (e)=> {
   e.preventDefault();
   const inputValue = todoInput.value;
+  // Array para salvar dados no local Storage
+  arr=[];
   if (inputValue) {
+    if (localStorage.meuArr){
+      arr=JSON.parse(localStorage.getItem('meuArr'));
+    }
+    arr.push(inputValue)
+    arr.push("none");
     // Salva a atividade
     saveTodo(inputValue)
+  
   };
 });
 
@@ -76,17 +84,29 @@ document.addEventListener("click", (e) => {
   const targetEl = e.target;
   const parentEl = targetEl.closest("div");
   let todoTitle;
-
+  // Ler os dados da LocalStorage
+  if (localStorage.meuArr){
+    arr=JSON.parse(localStorage.getItem('meuArr'));
+  }
+    
   if (parentEl && parentEl.querySelector("h3")) {
     todoTitle = parentEl.querySelector("h3").innerText;
+    // Localizar o item na Array
+    pos=arr.indexOf(todoTitle);
+    if (pos==-1) {
+      alert("Dado não existe!");
+    } 
+
   }
 
   if (targetEl.classList.contains("finish-todo")) {
     parentEl.classList.toggle("done");
+    arr[pos+1]=arr[pos+1]=="none"?"done":"none";
   }
 
   if (targetEl.classList.contains("remove-todo")) {
     parentEl.remove();
+    arr.splice(pos,2);
   }
 
   if (targetEl.classList.contains("edit-todo")) {
@@ -95,6 +115,7 @@ document.addEventListener("click", (e) => {
     editInput.value = todoTitle;
     oldInputValue = todoTitle;
   }
+  localStorage.meuArr=JSON.stringify(arr);
 });
 
 cancelEditBtn.addEventListener("click", (e) => {
